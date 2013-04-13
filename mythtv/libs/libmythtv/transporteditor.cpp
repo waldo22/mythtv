@@ -739,7 +739,8 @@ TransportPage::TransportPage(const MultiplexID *_id, uint nType) :
         left->addChild(new Modulation(id, nType));
     }
     else if ((CardUtil::FIREWIRE == nType) ||
-             (CardUtil::FREEBOX  == nType))
+             (CardUtil::FREEBOX  == nType) ||
+             (CardUtil::R5000    == nType))
     {
         left->addChild(new DTVStandard(id, true, true));
     }

@@ -1,23 +1,19 @@
-=====
-MythTV Project Info
-=====
+This is the full source of MythTV 0.26, pre-patched with support for the R5000-HD STB modification for your convenience.
 
-Useful project links
------
+This repository is almost entirely based on Alan Nisota's fine work on his R5000 for Linux code, which patched MythTV versions from 0.22 through 0.24.
 
- - `Trac bug tracker <http://code.mythtv.org/trac>`_
+Many of Alan's files were used directly without modification, so thanks to him for making this possible.
 
-   - Please note: If you create a pull request, we expect a corresponding
-     ticket to be created in Trac with a link to the pull request in it.  
-     Trac is our canonical bug tracking location, and many of our developers
-     may not notice the pull request otherwise.
+Other changes made by me were all based on the existing support in MythTV for IPTV tuners and Firewire tuners, as Alan's original changes were, and you'll notice that the R5000 code is very similar to the code for these "tuners".
 
-   - Please also note that we only support code that is from the canonical
-     fork at https://github.com/MythTV  For other forks, please send bug
-     reports to the owners of the fork where the code was committed.
+You should be able to load the R5000 firmware, compile, install and enjoy.
 
- - `Documentation wiki <http://www.mythtv.org/wiki>`_
- - `Mailing lists <http://www.mythtv.org/mailman/listinfo>`_
- - `IRC <irc://freenode.net/mythtv-users>`_ at Freenode.net, #mythtv-users
+Compiling is standard stuff.
+
+./configure ./make ./make install
+
+Feedback is welcomed!
 
 
+To compile on Debian, the following libs should be installed:
+qt4-qmake yasm uuid-dev libfreetype6-dev zlib1g-dev libmp3lame-dev libqtwebkit-dev libxxf86vm-dev x11proto-xf86vidmode-dev libxinerama-dev libxinerama1 x11proto-xinerama-dev mysql-server pkg-config python-mysqldb libxslt1.1 python-lxml python-pycurl python-urlgrabber libsocket6-perl libio-socket-inet6-perl libnet-upnp-perl

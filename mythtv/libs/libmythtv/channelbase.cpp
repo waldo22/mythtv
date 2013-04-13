@@ -26,6 +26,7 @@ using namespace std;
 #include "firewirechannel.h"
 #include "mythcorecontext.h"
 #include "cetonchannel.h"
+#include "r5000channel.h"
 #include "dummychannel.h"
 #include "tvremoteutil.h"
 #include "channelutil.h"
@@ -1197,6 +1198,15 @@ ChannelBase *ChannelBase::CreateChannel(
         channel = new CetonChannel(tvrec, genOpt.videodev);
 #endif
     }
+    else if (genOpt.cardtype == "R5000")
+    {
+#ifdef USING_R5000
+        channel = new R5000Channel(tvrec, genOpt.videodev, fwOpt.model, dvbOpt.dvb_on_demand);
+        dynamic_cast<R5000Channel*>(channel)->SetSlowTuning(
+            dvbOpt.dvb_tuning_delay);
+#endif
+    }
+
     else if (CardUtil::IsV4L(genOpt.cardtype))
     {
 #ifdef USING_V4L2

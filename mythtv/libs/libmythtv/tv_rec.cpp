@@ -29,6 +29,7 @@
 #include "remoteutil.h"
 #include "ringbuffer.h"
 #include "mythlogging.h"
+#include "r5000channel.h"
 #include "v4lchannel.h"
 #include "dialogbox.h"
 #include "jobqueue.h"
@@ -918,9 +919,6 @@ void TVRec::FinishedRecording(RecordingInfo *curRec, RecordingQuality *recq)
         PreviewGeneratorQueue::GetPreviewImage(*curRec, "");
     }
 
-    // store recording in recorded table
-    curRec->FinishedRecording(!is_good || (recgrp == "LiveTV"));
-
     // send out UPDATE_RECORDING_STATUS message
     if (recgrp != "LiveTV")
     {
@@ -932,6 +930,9 @@ void TVRec::FinishedRecording(RecordingInfo *curRec, RecordingQuality *recq)
                      .arg(curRec->GetRecordingEndTime(MythDate::ISODate)));
         gCoreContext->dispatch(me);
     }
+
+    // store recording in recorded table
+    curRec->FinishedRecording(!is_good || (recgrp == "LiveTV"));
 
     // send out REC_FINISHED message
     SendMythSystemRecEvent("REC_FINISHED", curRec);
@@ -1153,6 +1154,15 @@ void TVRec::CloseChannel(void)
 DTVChannel *TVRec::GetDTVChannel(void)
 {
     return dynamic_cast<DTVChannel*>(channel);
+}
+
+R5000Channel *TVRec::GetR5000Channel(void)
+{
+#ifdef USING_R5000
+    return dynamic_cast<R5000Channel*>(channel);
+#else
+    return NULL;
+#endif // USING_R5000
 }
 
 V4LChannel *TVRec::GetV4LChannel(void)

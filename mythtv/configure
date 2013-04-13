@@ -119,6 +119,7 @@ Advanced options (experts only):
   --disable-ivtv           disable ivtv support (PVR-x50) req. v4l2 support
   --disable-hdpvr          disable HD-PVR support
   --disable-dvb            disable DVB support
+  --disable-r5000          disable support for R5000 USB STBs
   --dvb-path=HDRLOC        location of directory containing
                            'linux/dvb/frontend.h', not the
                            directory with frontend.h [$dvb_path_default]
@@ -1514,6 +1515,7 @@ MYTHTV_CONFIG_LIST='
     hdpvr
     iptv
     ivtv
+    r5000
     asi
     joystick_menu
     libcec
@@ -2033,6 +2035,7 @@ doc_deps="texi2html"
 audio_oss_deps_any="soundcard_h sys_soundcard_h"
 dvb_deps="backend"
 firewire_deps="backend"
+r5000_deps="backend"
 iptv_deps="backend"
 ivtv_deps="backend v4l2"
 hdpvr_deps="backend v4l2"
@@ -2239,6 +2242,7 @@ enable ceton
 enable hdpvr
 enable iptv
 enable ivtv
+enable r5000
 enable asi
 enable lamemp3
 enable libass
@@ -5016,6 +5020,7 @@ if enabled backend; then
   echo "HDHomeRun support         ${hdhomerun-no}"
   echo "Ceton support             ${ceton-no}"
   echo "IPTV support              ${iptv-no}"
+  echo "R5000 support             ${r5000-no}"
   echo "ASI support               ${asi-no}"
 fi
 

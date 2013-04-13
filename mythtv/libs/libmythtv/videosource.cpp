@@ -35,6 +35,7 @@ using namespace std;
 #include "frequencies.h"
 #include "diseqcsettings.h"
 #include "firewiredevice.h"
+#include "r5000device.h"
 #include "compat.h"
 #include "mythdb.h"
 #include "mythdirs.h"
@@ -1530,6 +1531,101 @@ void HDHomeRunDeviceIDList::UpdateDevices(const QString &v)
     _oldValue = v;
 };
 
+class R5000TuningDelay : public SpinBoxSetting, public CaptureCardDBStorage
+{
+  public:
+    R5000TuningDelay(const CaptureCard &parent) :
+        SpinBoxSetting(this, 0, 2000, 25),
+        CaptureCardDBStorage(this, parent, "dvb_tuning_delay")
+    {
+        setLabel(QObject::tr("R5000 Tuning Delay (msec)"));
+        setHelpText(
+            QObject::tr("Some STBS (for example the ViP boxes) require "
+                        "additional time after setting the channel before starting recording.  "
+                        "This is especially necessary if different channels use different codecs."));
+    };
+};
+
+class R5000SendPowerBeforeChannel : public CheckBoxSetting, public CaptureCardDBStorage
+{
+  public:
+    R5000SendPowerBeforeChannel(const CaptureCard &parent) :
+        CheckBoxSetting(this),
+        CaptureCardDBStorage(this, parent, "dvb_on_demand")
+    {
+        setValue(false);
+        setLabel(QObject::tr("Turn on before Channel Change"));
+        setHelpText(QObject::tr(
+                        "On some STBs klike the ViP211, the power on/off "
+                        "detection isn't reliable if you let the box go into "
+                        "standby.  This forces a 'power-on' command before "
+                        "changing channels.  This will very likely do the "
+                        "wrong thing for non ViP boxes."));
+
+    };
+};
+
+class R5000Serial : public ComboBoxSetting, public CaptureCardDBStorage
+{
+  public:
+    R5000Serial(const CaptureCard &parent) :
+        ComboBoxSetting(this),
+        CaptureCardDBStorage(this, parent, "videodevice")
+    {
+        setLabel(QObject::tr("Serial #"));
+#ifdef USING_R5000
+        QStringList serials = R5000Device::GetSTBList();
+        for (int i = 0; i < serials.size(); i++)
+        {
+            addSelection(serials[i]);
+        }
+#endif // USING_R5000
+    }
+};
+
+class R5000Model : public ComboBoxSetting, public CaptureCardDBStorage
+{
+  public:
+    R5000Model(const CaptureCard  &parent) :
+      ComboBoxSetting(this),
+      CaptureCardDBStorage(this, parent, "firewire_model")
+    {
+        setLabel(QObject::tr("R5000 STB type"));
+        addSelection("VIP211");
+        addSelection("VIP411");
+        addSelection("VIP622");
+        addSelection("VIP722");
+        addSelection("BEV9242");
+        addSelection("DISH6000");
+        addSelection("DIRECTV");
+        addSelection("STARCHOICE/DSR");
+        addSelection("HDD-200");
+        QString help = QObject::tr(
+            "Choose the type of R5000 enabled STB you are using.");
+        setHelpText(help);
+    }
+};
+
+class R5000ConfigurationGroup : public VerticalConfigurationGroup
+{
+  public:
+    R5000ConfigurationGroup(CaptureCard& a_parent):
+       VerticalConfigurationGroup(false, true, false, false),
+       parent(a_parent)
+    {
+        setUseLabel(false);
+        addChild(new R5000SendPowerBeforeChannel(parent));
+        addChild(new R5000TuningDelay(parent));
+        addChild(new R5000Serial(parent));
+        addChild(new R5000Model(parent));
+        addChild(new EmptyAudioDevice(parent));
+        addChild(new EmptyVBIDevice(parent));
+    };
+
+  private:
+    CaptureCard &parent;
+};
+
 class IPTVHost : public LineEditSetting, public CaptureCardDBStorage
 {
   public:
@@ -2296,6 +2392,10 @@ CaptureCardGroup::CaptureCardGroup(CaptureCard &parent) :
     addTarget("CETON",     new CetonConfigurationGroup(parent));
 #endif // USING_CETON
 
+#ifdef USING_R5000
+    addTarget("R5000",     new R5000ConfigurationGroup(parent));
+#endif // USING_R5000
+
     // for testing without any actual tuner hardware:
     addTarget("IMPORT",    new ImportConfigurationGroup(parent));
     addTarget("DEMO",      new DemoConfigurationGroup(parent));
@@ -2508,6 +2608,10 @@ void CardType::fillSelections(SelectSetting* setting)
     setting->addSelection(
         QObject::tr("Ceton Cablecard tuner "), "CETON");
 #endif // USING_CETON
+
+#ifdef USING_R5000
+    setting->addSelection(QObject::tr("R5000 Capable STB"), "R5000");
+#endif // USING_R5000
 
     setting->addSelection(QObject::tr("Import test recorder"), "IMPORT");
     setting->addSelection(QObject::tr("Demo test recorder"),   "DEMO");

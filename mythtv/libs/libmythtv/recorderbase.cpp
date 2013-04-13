@@ -9,12 +9,14 @@ using namespace std;
 #include "firewirechannel.h"
 #include "importrecorder.h"
 #include "cetonrecorder.h"
+#include "r5000recorder.h"
 #include "dummychannel.h"
 #include "hdhrrecorder.h"
 #include "iptvrecorder.h"
 #include "mpegrecorder.h"
 #include "recorderbase.h"
 #include "cetonchannel.h"
+#include "r5000channel.h"
 #include "asirecorder.h"
 #include "dvbrecorder.h"
 #include "hdhrchannel.h"
@@ -577,6 +579,13 @@ RecorderBase *RecorderBase::CreateRecorder(
 #else
         recorder = new ImportRecorder(tvrec);
 #endif
+    }
+    else if (genOpt.cardtype == "R5000")
+    {
+#ifdef USING_R5000
+        recorder = new R5000Recorder(
+            tvrec, dynamic_cast<R5000Channel*>(channel));
+#endif // USING_R5000
     }
     else if (CardUtil::IsV4L(genOpt.cardtype))
     {

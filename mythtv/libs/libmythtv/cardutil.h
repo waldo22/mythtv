@@ -66,6 +66,7 @@ class MTV_PUBLIC CardUtil
         DEMO      = 15,
         ASI       = 16,
         CETON     = 17,
+	R5000     = 18,
     };
 
     static enum CARD_TYPES toCardType(const QString &name)
@@ -106,6 +107,8 @@ class MTV_PUBLIC CardUtil
             return ASI;
         if ("CETON" == name)
             return CETON;
+	if ("R5000" == name)
+            return R5000;
         return ERROR_UNKNOWN;
     }
 
@@ -115,7 +118,8 @@ class MTV_PUBLIC CardUtil
             (rawtype != "DVB")       && (rawtype != "FIREWIRE") &&
             (rawtype != "HDHOMERUN") && (rawtype != "FREEBOX")  &&
             (rawtype != "IMPORT")    && (rawtype != "DEMO")     &&
-            (rawtype != "ASI")       && (rawtype != "CETON");
+            (rawtype != "ASI")       && (rawtype != "CETON") &&
+            (rawtype != "R5000") ;
     }
 
     static bool         IsV4L(const QString &rawtype)
@@ -135,7 +139,8 @@ class MTV_PUBLIC CardUtil
         return
             (rawtype == "FIREWIRE")  || (rawtype == "HDPVR") ||
             (rawtype == "IMPORT")    || (rawtype == "DEMO")  ||
-            (rawtype == "GO7007")    || (rawtype == "MJPEG");
+            (rawtype == "GO7007")    || (rawtype == "MJPEG") ||
+            (rawtype == "R5000");
     }
     static QString      GetScanableCardTypes(void);
 
@@ -182,7 +187,7 @@ class MTV_PUBLIC CardUtil
             (rawtype == "FIREWIRE")  || (rawtype == "HDHOMERUN") ||
             (rawtype == "FREEBOX")   || (rawtype == "ASI")       ||
             (rawtype == "IMPORT")    || (rawtype == "DEMO")      ||
-            (rawtype == "CETON");
+            (rawtype == "CETON")     || (rawtype == "R5000");
     }
 
     // Card creation and deletion

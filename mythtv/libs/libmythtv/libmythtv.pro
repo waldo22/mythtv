@@ -664,6 +664,25 @@ using_backend {
         DEFINES += USING_ASI
     }
 
+    #Support for R5000 usb device
+    using_r5000 {
+        HEADERS += r5000channel.h           r5000recorder.h
+        HEADERS += r5000signalmonitor.h     r5000device.h
+	HEADERS += r5000/r5000.h            r5000/libusb_augment.h
+	HEADERS += r5000/r5000_internal.h   r5000/r5000init.h
+
+        SOURCES += r5000channel.cpp         r5000recorder.cpp
+        SOURCES += r5000signalmonitor.cpp   r5000device.cpp
+	SOURCES += r5000/r5000.c            r5000/libusb_augment.c
+	SOURCES += r5000/r5k_vip.c          r5000/r5k_pes.c
+	SOURCES += r5000/r5k_sat.c          r5000/r5k_misc.c
+	SOURCES += r5000/r5k_vip_buttons.c  r5000/r5k_directv_buttons.c
+	SOURCES += r5000/r5k_dish6000_buttons.c
+
+	LIBS += -lusb
+        DEFINES += USING_R5000
+    }
+
     DEFINES += USING_BACKEND
 }
 

@@ -54,6 +54,11 @@ extern "C" {
 #   include "cetonchannel.h"
 #endif
 
+#ifdef USING_R5000
+#   include "r5000signalmonitor.h"
+#   include "r5000channel.h"
+#endif
+
 #undef DBG_SM
 #define DBG_SM(FUNC, MSG) LOG(VB_CHANNEL, LOG_DEBUG, \
     QString("SM(%1)::%2: %3").arg(channel->GetDevice()).arg(FUNC).arg(MSG))
@@ -151,6 +156,15 @@ SignalMonitor *SignalMonitor::Init(QString cardtype, int db_cardnum,
         ASIChannel *fc = dynamic_cast<ASIChannel*>(channel);
         if (fc)
             signalMonitor = new ASISignalMonitor(db_cardnum, fc);
+    }
+#endif
+
+#ifdef USING_R5000
+    if (cardtype.toUpper() == "R5000")
+    {
+        R5000Channel *fc = dynamic_cast<R5000Channel*>(channel);
+        if (fc)
+            signalMonitor = new R5000SignalMonitor(db_cardnum, fc);
     }
 #endif
 

@@ -46,6 +46,7 @@ class FirewireChannel;
 class V4LChannel;
 class HDHRChannel;
 class CetonChannel;
+class R5000Channel;
 
 class MPEGStreamData;
 class ProgramMapTable;
@@ -264,6 +265,7 @@ class MTV_PUBLIC TVRec : public SignalMonitorListener, public QRunnable
                        bool enter_power_save_mode);
     void CloseChannel(void);
     DTVChannel *GetDTVChannel(void);
+    R5000Channel *GetR5000Channel(void);
     V4LChannel *GetV4LChannel(void);
 
     bool SetupSignalMonitor(
